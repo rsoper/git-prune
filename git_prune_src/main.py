@@ -74,7 +74,7 @@ class git_prune(object):
         '''
         Confirm which branches will be removed. Remove them.
         '''
-        if self.notRemote == ['']:
+        if (self.notRemote == [''] or self.notRemote == []):
             print('Local git branches match remote. No pruning needed.')
             exit(0)
         else:
