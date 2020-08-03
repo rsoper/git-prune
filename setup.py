@@ -8,7 +8,7 @@ setup(
     name='git-prune',
     packages=find_packages(exclude="tests"),
     license="MIT",
-    version='0.0.1',
+    version='0.0.2',
     description='Clean up your local git branches with one command',
     long_description=long_description,
     long_description_content_type="text/markdown",
