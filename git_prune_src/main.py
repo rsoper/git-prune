@@ -74,12 +74,16 @@ class git_prune(object):
         '''
         Confirm which branches will be removed. Remove them.
         '''
-        deleteBranches = input(
-            f'Branch(es) {self.notRemote} do not exist in the origin repository. Would you like to delete them? y/n: ')
-        if deleteBranches == 'y':
-            self.delete_branches()
+        if self.notRemote == ['']:
+            print('Local git branches match remote. No pruning needed.')
+            exit(0)
         else:
-            print(f'Branch(es) {self.notRemote} will not be deleted.')
+            deleteBranches = input(
+                f'Branch(es) {self.notRemote} do not exist in the origin repository. Would you like to delete them? y/n: ')
+            if deleteBranches == 'y':
+                self.delete_branches()
+            else:
+                print(f'Branch(es) {self.notRemote} will not be deleted.')
 
 
 def main():
@@ -87,5 +91,4 @@ def main():
     gitPrune.prune_local_branches()
 
 if __name__ == "__main__":
-    gitPrune = git_prune()
-    gitPrune.prune_local_branches()
+    main()
