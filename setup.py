@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     author='Richard Soper',
     author_email='',
-    url='',
+    url='https://github.com/rsoper/git-prune',
     install_requires=[],
     package_data={},
     include_package_data=True,
