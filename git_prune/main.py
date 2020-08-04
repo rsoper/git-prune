@@ -1,10 +1,12 @@
 import shlex
 import subprocess
+import re
 
 
 class git_prune(object):
 
     def __init__(self):
+        self.shellCMD('git fetch -p')
         self.remoteBranches = self.get_remote_branches()
         self.localBranches = self.get_local_branches()
         self.notRemote = list(set(self.localBranches) -
@@ -31,35 +33,22 @@ class git_prune(object):
         '''
         Construct list of remote branches
         '''
-        self.shellCMD('git fetch -p')
-        remoteBranches = self.shellCMD('git branch -r')
-        remoteBranches = remoteBranches.split('\n')
-        finalRemote = []
+        remoteBranches = self.shellCMD('git for-each-ref')
+        remoteBranches = re.findall(
+            r'refs/remotes/[a-zA-Z]*/(.*)', remoteBranches)
         for line in remoteBranches:
             if "HEAD" in line:
-                pass
+                remoteBranches.remove(line)
             else:
-                branchName = line.replace('origin/', '')
-                finalRemote.append(branchName.strip())
-        return finalRemote
+                pass
+        return remoteBranches
 
     def get_local_branches(self):
         '''
         Construct list of local branches
         '''
-        mergedBranches = self.shellCMD('git branch --merged')
-        unmergedBranches = self.shellCMD('git branch --no-merged')
-        localBranches = []
-        mergedBranches = mergedBranches.split('\n')
-        for line in mergedBranches:
-            if "*" in line:
-                line = line.replace('*', '')
-            localBranches.append(line.strip())
-        unmergedBranches = unmergedBranches.split('\n')
-        for line in unmergedBranches:
-            if "*" in line:
-                line = line.replace('*', '')
-            localBranches.append(line.strip())
+        localBranches = self.shellCMD('git for-each-ref')
+        localBranches = re.findall(r'refs/heads/(.*)', localBranches)
         return localBranches
 
     def delete_branches(self):
@@ -89,6 +78,7 @@ class git_prune(object):
 def main():
     gitPrune = git_prune()
     gitPrune.prune_local_branches()
+
 
 if __name__ == "__main__":
     main()
