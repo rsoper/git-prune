@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "git-prune"
-version = "0.0.5"
+version = "0.0.7"
 description = "Clean up your local git branches to match the remote with one command."
 authors = ["Richard Soper"]
 license = "MIT"
