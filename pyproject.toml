@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "git-prune"
-version = "0.0.7"
+version = "0.0.8"
 description = "Clean up your local git branches to match the remote with one command."
 authors = ["Richard Soper"]
 license = "MIT"
@@ -9,11 +9,12 @@ repository = "https://github.com/rsoper/git-prune"
 
 [tool.poetry.dependencies]
 python = "^3.5"
+click = "^7.1.2"
 
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-git-prune = 'git_prune.main:main'
+git-prune = 'git_prune.main:cli'
 
 [build-system]
 requires = ["poetry-core>=1.0.0a5"]

@@ -1,12 +1,21 @@
 import shlex
 import subprocess
 import re
+import click
+import os
+import sys
 
 
 class git_prune(object):
 
-    def __init__(self):
-        self.shellCMD('git fetch -p')
+    def __init__(self, **kwargs):
+        self.workingDirectory = kwargs['dir_'] if ("dir_" in kwargs) else os.getcwd(
+        )
+        self.isGit = True if ".git" in os.listdir(
+            self.workingDirectory) else sys.exit("Directory does not contain .git directory.")
+        self.git = f'/usr/bin/git --git-dir={self.workingDirectory}/.git/ --work-tree={self.workingDirectory}' if self.workingDirectory != os.getcwd() else 'git'
+
+        self.shellCMD(f'{self.git} fetch -p')
         self.remoteBranches = self.get_remote_branches()
         self.localBranches = self.get_local_branches()
         self.notRemote = list(set(self.localBranches) -
@@ -33,7 +42,7 @@ class git_prune(object):
         '''
         Construct list of remote branches
         '''
-        remoteBranches = self.shellCMD('git for-each-ref')
+        remoteBranches = self.shellCMD(f'{self.git} for-each-ref')
         remoteBranches = re.findall(
             r'refs/remotes/[a-zA-Z]*/(.*)', remoteBranches)
         for line in remoteBranches:
@@ -47,7 +56,7 @@ class git_prune(object):
         '''
         Construct list of local branches
         '''
-        localBranches = self.shellCMD('git for-each-ref')
+        localBranches = self.shellCMD(f'{self.git} for-each-ref')
         localBranches = re.findall(r'refs/heads/(.*)', localBranches)
         return localBranches
 
@@ -57,7 +66,7 @@ class git_prune(object):
         '''
         self.shellCMD('git checkout master')
         for branch in self.notRemote:
-            self.shellCMD(f'git branch -D {branch}')
+            self.shellCMD(f'{self.git} branch -D {branch}')
 
     def prune_local_branches(self):
         '''
@@ -65,7 +74,7 @@ class git_prune(object):
         '''
         if (self.notRemote == [''] or self.notRemote == []):
             print('Local git branches match remote. No pruning needed.')
-            exit(0)
+            sys.exit(0)
         else:
             deleteBranches = input(
                 f'Branch(es) {self.notRemote} do not exist in the origin repository. Would you like to delete them? y/n: ')
@@ -75,10 +84,14 @@ class git_prune(object):
                 print(f'Branch(es) {self.notRemote} will not be deleted.')
 
 
-def main():
-    gitPrune = git_prune()
+@click.command()
+@click.option('-d', '--directory', 'dir_', default='pwd', help='Specify your target directory. Default is current working directory.')
+def cli(dir_):
+    if dir_ == 'pwd':
+        dir_ = os.getcwd()
+    gitPrune = git_prune(dir_=dir_)
     gitPrune.prune_local_branches()
 
 
 if __name__ == "__main__":
-    main()
+    cli()

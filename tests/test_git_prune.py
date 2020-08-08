@@ -9,7 +9,7 @@ class GitPruneTests(unittest.TestCase):
         self.gitprune = main.git_prune()
 
     def test_version(self):
-        assert __version__ == '0.0.7'
+        assert __version__ == '0.0.8'
 
     def test_shellCMD(self):
         shellCMD = self.gitprune.shellCMD('echo testing123')
@@ -40,3 +40,5 @@ class GitPruneTests(unittest.TestCase):
         assert 'new-branch' in self.gitprune.notRemote
         self.gitprune.delete_branches()
         assert 'new-branch' not in self.gitprune.get_local_branches()
+
+    # def test_end_to_end(self):
