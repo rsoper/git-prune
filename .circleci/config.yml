@@ -9,8 +9,11 @@ jobs:
     steps:
       - checkout
       - run:
-          command: python3 -u -m unittest discover
-          name: Test
+          command: |
+            pip3 install poetry
+            poetry install
+            poetry run python3 -u -m unittest discover
+          name: Unittest
 
 workflows:
   main:
