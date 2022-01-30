@@ -9,7 +9,7 @@ class GitPruneTests(unittest.TestCase):
         self.gitprune = main.git_prune()
 
     def test_version(self):
-        assert __version__ == '0.0.8'
+        assert __version__ == '0.0.9'
 
     def test_shellCMD(self):
         shellCMD = self.gitprune.shellCMD('echo testing123')
