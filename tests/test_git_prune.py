@@ -7,6 +7,7 @@ def setup_module(module):
     print("*****SETUP*****")
     gitprune = GitPrune()
     gitprune.shell_cmd("git branch setup")
+    gitprune.not_remote.append("setup")
 
 
 def teardown_module(module):
@@ -36,6 +37,12 @@ def test_get_local_branches():
     assert type(local_branches) == list
     assert local_branches != []
 
+
+def test_not_remote():
+    assert type(gitprune.not_remote) == list
+    assert gitprune.not_remote == ["setup"]
+
+
 def test_delete_branches():
     print(gitprune.shell_cmd("git branch new-branch"))
     assert "new-branch" in gitprune.get_local_branches()
@@ -44,9 +51,3 @@ def test_delete_branches():
     assert "new-branch" in gitprune.not_remote
     gitprune.delete_branches()
     assert "new-branch" not in gitprune.get_local_branches()
-
-def test_not_remote():
-    assert type(gitprune.not_remote) == list
-    assert gitprune.not_remote == ["setup"]
-
-
