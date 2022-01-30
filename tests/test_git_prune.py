@@ -43,7 +43,7 @@ def test_not_remote():
 
 
 def test_delete_branches():
-    print(gitprune.shell_cmd("git branch -c master new-branch"))
+    print(gitprune.shell_cmd("git branch new-branch"))
     assert "new-branch" in gitprune.get_local_branches()
     gitprune.shell_cmd("git checkout new-branch")
     gitprune.not_remote.append("new-branch")
