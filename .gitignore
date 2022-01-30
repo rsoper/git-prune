@@ -2,3 +2,4 @@ git_prune.egg-info
 dist
 build
 **.pyc**
+**.DS_Store**
