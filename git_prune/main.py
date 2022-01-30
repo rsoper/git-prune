@@ -6,91 +6,106 @@ import os
 import sys
 
 
-class git_prune(object):
-
+class GitPrune(object):
     def __init__(self, **kwargs):
-        self.workingDirectory = kwargs['dir_'] if ("dir_" in kwargs) else os.getcwd(
+        self.working_directory = kwargs["dir_"] if ("dir_" in kwargs) else os.getcwd()
+        self.is_git = (
+            True
+            if ".git" in os.listdir(self.working_directory)
+            else sys.exit("Directory does not contain .git directory.")
         )
-        self.isGit = True if ".git" in os.listdir(
-            self.workingDirectory) else sys.exit("Directory does not contain .git directory.")
-        self.git = f'/usr/bin/git --git-dir={self.workingDirectory}/.git/ --work-tree={self.workingDirectory}' if self.workingDirectory != os.getcwd() else 'git'
+        self.git = (
+            f"/usr/bin/git --git-dir={self.working_directory}/.git/ --work-tree={self.working_directory}"
+            if self.working_directory != os.getcwd()
+            else "git"
+        )
 
-        self.shellCMD(f'{self.git} fetch -p')
-        self.remoteBranches = self.get_remote_branches()
-        self.localBranches = self.get_local_branches()
-        self.notRemote = list(set(self.localBranches) -
-                              set(self.remoteBranches))
+        self.shell_cmd(f"{self.git} fetch -p")
+        self.remote_branches = self.get_remote_branches()
+        self.local_branches = self.get_local_branches()
+        self.not_remote = list(set(self.local_branches) - set(self.remote_branches))
 
-    def shellCMD(self, cmd):
-        '''
-        Run a shell command. 
-        Command should be a single string. 
-        Function will create the necessary list before running subprocess.
-        Response will be the stripped results.
-        '''
+    def shell_cmd(self, cmd):
+        """Execute a shell command
+
+        Args:
+            cmd (str): Shell command with arguments to execute
+
+        Returns:
+            str: Shell command output
+        """
         try:
             cmd = shlex.split(cmd)
             results = subprocess.check_output(
-                cmd, stderr=subprocess.STDOUT, shell=False)
+                cmd, stderr=subprocess.STDOUT, shell=False
+            )
             results = results.strip()
-            return results.decode('UTF-8')
+            return results.decode("UTF-8")
         except subprocess.CalledProcessError as e:
             errorText = e.output.strip()
-            return errorText.decode('UTF-8')
+            return errorText.decode("UTF-8")
 
     def get_remote_branches(self):
-        '''
-        Construct list of remote branches
-        '''
-        remoteBranches = self.shellCMD(f'{self.git} for-each-ref')
-        remoteBranches = re.findall(
-            r'refs/remotes/[a-zA-Z]*/(.*)', remoteBranches)
-        for line in remoteBranches:
+        """Get branches currently on remote
+
+        Returns:
+            list: List of remote branches
+        """
+        remote_branches = self.shell_cmd(f"{self.git} for-each-ref")
+        remote_branches = re.findall(r"refs/remotes/[a-zA-Z]*/(.*)", remote_branches)
+        for line in remote_branches:
             if "HEAD" in line:
-                remoteBranches.remove(line)
+                remote_branches.remove(line)
             else:
                 pass
-        return remoteBranches
+        return remote_branches
 
     def get_local_branches(self):
-        '''
-        Construct list of local branches
-        '''
-        localBranches = self.shellCMD(f'{self.git} for-each-ref')
-        localBranches = re.findall(r'refs/heads/(.*)', localBranches)
-        return localBranches
+        """Get branches currently on the local machine
+
+        Returns:
+            str: List of local branches
+        """
+        local_branches = self.shell_cmd(f"{self.git} for-each-ref")
+        local_branches = re.findall(r"refs/heads/(.*)", local_branches)
+        return local_branches
 
     def delete_branches(self):
-        '''
-        Delete all branches on notRemote list
-        '''
-        self.shellCMD('git checkout master')
-        for branch in self.notRemote:
-            self.shellCMD(f'{self.git} branch -D {branch}')
+        """Delete the branches not on remote"""
+        self.shell_cmd("git checkout master")
+        for branch in self.not_remote:
+            self.shell_cmd(f"{self.git} branch -D {branch}")
 
     def prune_local_branches(self):
-        '''
+        """
         Confirm which branches will be removed. Remove them.
-        '''
-        if (self.notRemote == [''] or self.notRemote == []):
-            print('Local git branches match remote. No pruning needed.')
-            sys.exit(0)
-        else:
-            deleteBranches = input(
-                f'Branch(es) {self.notRemote} do not exist in the origin repository. Would you like to delete them? y/n: ')
-            if deleteBranches == 'y':
+        """
+        if self.not_remote:
+            delete_branches = input(
+                f"Branch(es) {self.not_remote} do not exist in the origin repository. Would you like to delete them? y/n: "
+            )
+            if delete_branches == "y":
                 self.delete_branches()
             else:
-                print(f'Branch(es) {self.notRemote} will not be deleted.')
+                print(f"Branch(es) {self.not_remote} will not be deleted.")
+        else:
+            print("Local git branches match remote. No pruning needed.")
+            sys.exit(0)
 
 
 @click.command()
-@click.option('-d', '--directory', 'dir_', default='pwd', help='Specify your target directory. Default is current working directory.')
+@click.option(
+    "-d",
+    "--directory",
+    "dir_",
+    default="pwd",
+    help="Specify your target directory. Default is current working directory.",
+)
 def cli(dir_):
-    if dir_ == 'pwd':
+    if dir_ == "pwd":
         dir_ = os.getcwd()
-    gitPrune = git_prune(dir_=dir_)
-    gitPrune.prune_local_branches()
+    git_prune = GitPrune(dir_=dir_)
+    git_prune.prune_local_branches()
 
 
 if __name__ == "__main__":

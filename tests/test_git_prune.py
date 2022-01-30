@@ -6,38 +6,38 @@ import unittest
 class GitPruneTests(unittest.TestCase):
 
     def setUp(self):
-        self.gitprune = main.git_prune()
+        self.gitprune = main.GitPrune()
 
     def test_version(self):
-        assert __version__ == '0.0.8'
+        assert __version__ == '0.0.9'
 
-    def test_shellCMD(self):
-        shellCMD = self.gitprune.shellCMD('echo testing123')
-        assert shellCMD == 'testing123'
-        assert type(shellCMD) == str
+    def test_shell_CMD(self):
+        shell_CMD = self.gitprune.shell_cmd('echo testing123')
+        assert shell_CMD == 'testing123'
+        assert type(shell_CMD) == str
 
     def test_get_remote_branches(self):
-        remoteBranches = self.gitprune.get_remote_branches()
-        assert 'master' in remoteBranches
-        assert type(remoteBranches) == list
-        assert remoteBranches != []
+        remote_branches = self.gitprune.get_remote_branches()
+        assert 'master' in remote_branches
+        assert type(remote_branches) == list
+        assert remote_branches != []
 
     def test_get_local_branches(self):
-        localBranches = self.gitprune.get_local_branches()
-        assert 'master' in localBranches
-        assert type(localBranches) == list
-        assert localBranches != []
+        local_branches = self.gitprune.get_local_branches()
+        assert 'master' in local_branches
+        assert type(local_branches) == list
+        assert local_branches != []
 
     def test_not_remote(self):
-        assert type(self.gitprune.notRemote) == list
-        assert self.gitprune.notRemote == []
+        assert type(self.gitprune.not_remote) == list
+        assert self.gitprune.not_remote == []
 
     def test_delete_branches(self):
-        self.gitprune.shellCMD('git branch -c master new-branch')
+        self.gitprune.shell_cmd('git branch -c master new-branch')
         assert 'new-branch' in self.gitprune.get_local_branches()
-        self.gitprune.shellCMD('git checkout new-branch')
-        self.gitprune.notRemote.append('new-branch')
-        assert 'new-branch' in self.gitprune.notRemote
+        self.gitprune.shell_cmd('git checkout new-branch')
+        self.gitprune.not_remote.append('new-branch')
+        assert 'new-branch' in self.gitprune.not_remote
         self.gitprune.delete_branches()
         assert 'new-branch' not in self.gitprune.get_local_branches()
 
