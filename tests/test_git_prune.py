@@ -39,7 +39,7 @@ def test_get_local_branches():
 
 def test_not_remote():
     assert type(gitprune.not_remote) == list
-    assert gitprune.not_remote == []
+    assert gitprune.not_remote == ["setup"]
 
 
 def test_delete_branches():
