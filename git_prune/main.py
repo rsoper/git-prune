@@ -68,9 +68,7 @@ class GitPrune(object):
             str: List of local branches
         """
         local_branches = self.shell_cmd(f"{self.git} for-each-ref")
-        print(f"Local before regex: {local_branches}")
         local_branches = re.findall(r"refs/heads/(.*)", local_branches)
-        print(f"Local after regex: {local_branches}")
         return local_branches
 
     def delete_branches(self):

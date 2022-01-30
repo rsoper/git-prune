@@ -6,7 +6,7 @@ def setup_module(module):
     global gitprune
     print("*****SETUP*****")
     gitprune = GitPrune()
-    gitprune.new_content = True
+    gitprune.shell_cmd("git branch setup")
 
 
 def teardown_module(module):
