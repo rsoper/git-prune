@@ -6,7 +6,7 @@ import unittest
 class GitPruneTests(unittest.TestCase):
 
     def setUp(self):
-        self.gitprune = main.git_prune()
+        self.gitprune = main.GitPrune()
 
     def test_version(self):
         assert __version__ == '0.0.9'
