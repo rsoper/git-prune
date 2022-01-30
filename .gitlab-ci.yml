@@ -10,4 +10,4 @@ before_script:
 unittest:
   stage: Unit tests
   script:
-    - poetry run python3 -u -m unittest discover
+    - poetry run python3 -u -m pytest
