@@ -10,7 +10,7 @@ before_script:
 unittest:
   stage: Unit tests
   script:
-    - poetry run python3 -u -m pytest
+    - poetry run python3 -u -m pytest --cov=git_prune --cov-report=html
   artifacts:
     paths:
       - htmlcov/*
