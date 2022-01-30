@@ -6,6 +6,7 @@ stages:
 before_script:
   - pip3 install poetry
   - poetry install
+  - apt install git
 
 unittest:
   stage: Unit tests
