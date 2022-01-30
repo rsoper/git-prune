@@ -13,4 +13,4 @@ unittest:
     - poetry run python3 -u -m pytest
   artifacts:
     paths:
-      - htmlcov
+      - htmlcov/*
