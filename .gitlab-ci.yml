@@ -2,7 +2,6 @@ image: python:3.6
 
 stages:
   - Unit tests
-  - Build
   - Publish
 
 before_script:
@@ -17,16 +16,11 @@ unittest:
     paths:
       - htmlcov/*
 
-build:
-  stage: Build
-  script:
-    - poetry build
-
 publish:
   variables:
     PYPI: $pypi
   stage: Publish
   script:
-    - poetry publish -u rsoper -p $PYPI
+    - poetry publish -u rsoper -p $PYPI --build
   only:
     - master
