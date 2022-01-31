@@ -2,6 +2,8 @@ image: python:3.6
 
 stages:
   - Unit tests
+  - Build
+  - Publish
 
 before_script:
   - pip3 install poetry
@@ -14,3 +16,17 @@ unittest:
   artifacts:
     paths:
       - htmlcov/*
+
+build:
+  stage: Build
+  script:
+    - poetry build
+
+publish:
+  variables:
+    PYPI: $pypi
+  stage: Publish
+  script:
+    - poetry publish -u rsoper -p $PYPI
+  only:
+    - master
