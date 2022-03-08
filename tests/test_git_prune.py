@@ -15,7 +15,7 @@ def teardown_module(module):
 
 
 def test_version():
-    assert __version__ == "0.0.9"
+    assert __version__ == "0.0.10"
 
 
 def test_shell_CMD():
