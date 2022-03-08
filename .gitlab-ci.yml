@@ -1,0 +1,26 @@
+image: python:3.6
+
+stages:
+  - Unit tests
+  - Publish
+
+before_script:
+  - pip3 install poetry
+  - poetry install
+
+unittest:
+  stage: Unit tests
+  script:
+    - poetry run python3 -u -m pytest --cov=git_prune --cov-report=html
+  artifacts:
+    paths:
+      - htmlcov/*
+
+publish:
+  variables:
+    PYPI: $pypi
+  stage: Publish
+  script:
+    - poetry publish -u rsoper -p $PYPI --build
+  only:
+    - master
