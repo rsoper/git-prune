@@ -26,7 +26,7 @@ class GitPrune(object):
         self.local_branches = self.get_local_branches()
         self.not_remote = list(set(self.local_branches) - set(self.remote_branches))
 
-    def shell_cmd(self, cmd):
+    def shell_cmd(self, cmd: str) -> str:
         """Execute a shell command
 
         Args:
@@ -46,7 +46,7 @@ class GitPrune(object):
             errorText = e.output.strip()
             return errorText.decode("UTF-8")
 
-    def get_remote_branches(self):
+    def get_remote_branches(self) -> list:
         """Get branches currently on remote
 
         Returns:
@@ -61,7 +61,7 @@ class GitPrune(object):
                 pass
         return remote_branches
 
-    def get_local_branches(self):
+    def get_local_branches(self) -> list:
         """Get branches currently on the local machine
 
         Returns:
@@ -73,7 +73,7 @@ class GitPrune(object):
 
     def delete_branches(self):
         """Delete the branches not on remote"""
-        self.shell_cmd("git checkout master")
+        self.shell_cmd(f"git checkout {self.get_remote_branches()[0]}")
         for branch in self.not_remote:
             self.shell_cmd(f"{self.git} branch -D {branch}")
 
