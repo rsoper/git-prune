@@ -9,11 +9,12 @@ repository = "https://github.com/rsoper/git-prune"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-click = "^7.1.2"
+click = "^8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
+black = "^22.1.0"
 
 [tool.poetry.scripts]
 git-prune = 'git_prune.main:cli'
