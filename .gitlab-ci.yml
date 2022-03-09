@@ -14,7 +14,7 @@ unittest:
     - poetry run python3 -u -m pytest --cov=git_prune --cov-report=html
   artifacts:
     paths:
-      - htmlcov/*
+      - htmlcov
 
 publish:
   variables:
