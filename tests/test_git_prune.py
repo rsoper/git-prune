@@ -10,7 +10,7 @@ def teardown_module(module):
 
 
 def test_version():
-    assert __version__ == "0.0.10"
+    assert __version__ == "0.1.0"
 
 
 def test_shell_CMD(gitprune):
