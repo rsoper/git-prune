@@ -21,6 +21,6 @@ publish:
     PYPI: $pypi
   stage: Publish
   script:
-    - poetry publish -u rsoper -p $PYPI --build
+    - poetry publish -u __token__ -p $PYPI --build
   only:
     - master
