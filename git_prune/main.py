@@ -1,7 +1,6 @@
 import shlex
 import subprocess
 import re
-from threading import local
 import click
 import os
 import sys
@@ -75,7 +74,7 @@ class GitPrune(object):
         """Delete the branches not on remote"""
         self.shell_cmd(f"git checkout {self.get_remote_branches()[0]}")
         for branch in self.not_remote:
-            self.shell_cmd(f"{self.git} branch -D {branch}")
+            self.shell_cmd(f'{self.git} branch -D "{branch}"')
 
     def prune_local_branches(self):
         """
