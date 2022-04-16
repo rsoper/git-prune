@@ -2,21 +2,21 @@ import shlex
 import subprocess
 import re
 import click
-import os
 import sys
+from pathlib import Path
 
 
 class GitPrune(object):
     def __init__(self, **kwargs):
-        self.working_directory = kwargs["dir_"] if ("dir_" in kwargs) else os.getcwd()
+        self.working_directory = kwargs["dir_"] if ("dir_" in kwargs) else Path.cwd()
         self.is_git = (
             True
-            if ".git" in os.listdir(self.working_directory)
+            if (self.working_directory / ".git").exists()
             else sys.exit("Directory does not contain .git directory.")
         )
         self.git = (
             f"/usr/bin/git --git-dir={self.working_directory}/.git/ --work-tree={self.working_directory}"
-            if self.working_directory != os.getcwd()
+            if self.working_directory != Path.cwd()
             else "git"
         )
 
@@ -103,7 +103,7 @@ class GitPrune(object):
 )
 def cli(dir_):
     if dir_ == "pwd":
-        dir_ = os.getcwd()
+        dir_ = Path.cwd()
     git_prune = GitPrune(dir_=dir_)
     git_prune.prune_local_branches()
 
