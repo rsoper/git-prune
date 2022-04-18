@@ -2,6 +2,7 @@ image: python:3.8
 
 stages:
   - Unit tests
+  - Test Results
   - Publish
 
 before_script:
@@ -16,6 +17,16 @@ unittest:
     paths:
       - htmlcov
 
+pages:
+  stage: Test Results
+  script:
+    - mkdir .public
+    - cp -r htmlcov/* .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+
 publish:
   variables:
     PYPI: $pypi
@@ -24,3 +35,4 @@ publish:
     - poetry publish -u __token__ -p $PYPI --build
   only:
     - master
+
