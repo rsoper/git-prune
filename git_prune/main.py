@@ -11,7 +11,7 @@ class GitPrune(object):
         self.working_directory = kwargs["dir_"] if ("dir_" in kwargs) else Path.cwd()
         self.is_git = (
             True
-            if (self.working_directory / ".git").exists()
+            if (Path(self.working_directory) / ".git").exists()
             else sys.exit("Directory does not contain .git directory.")
         )
         self.git = (
