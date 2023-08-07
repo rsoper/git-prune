@@ -13,10 +13,10 @@ def test_version():
     assert __version__ == "0.1.1"
 
 
-def test_shell_CMD(gitprune):
-    shell_CMD = gitprune.shell_cmd("echo testing123")
-    assert shell_CMD == "testing123"
-    assert type(shell_CMD) == str
+def test_shell_cmd(gitprune):
+    shell_cmd = gitprune.shell_cmd("echo testing123")
+    assert shell_cmd == "testing123"
+    assert type(shell_cmd) == str
 
 
 def test_get_remote_branches(gitprune):
