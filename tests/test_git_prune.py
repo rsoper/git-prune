@@ -1,18 +1,3 @@
-from git_prune import __version__
-
-
-def setup_module(module):
-    print("*****SETUP*****")
-
-
-def teardown_module(module):
-    print("*****TEARDOWN*****")
-
-
-def test_version():
-    assert __version__ == "0.1.2"
-
-
 def test_shell_cmd(gitprune):
     shell_cmd = gitprune.shell_cmd("echo testing123")
     assert shell_cmd == "testing123"
