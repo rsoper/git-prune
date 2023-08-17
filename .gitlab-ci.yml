@@ -33,7 +33,10 @@ publish:
     PYPI: $pypi
   stage: Publish
   script:
-    - poetry publish -u __token__ -p $PYPI --build
+    - poetry config pypi-token.pypi $PYPI_KEY
+    - poetry config repositories.gitlab https://gitlab.richardsoper.me/api/v4/projects/40/packages/pypi
+    - poetry publish --repository gitlab -u gitlab-ci-token -p $CI_JOB_TOKEN --build
+    - poetry publish --repository pypi --build
   only:
     - master
     - main
