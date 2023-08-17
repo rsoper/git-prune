@@ -1,20 +1,32 @@
-image: python:3.8
+default:
+  image: python:3.9
 
 stages:
   - Unit tests
+  - Test build
   - Publish
 
 before_script:
   - pip3 install poetry
   - poetry install
 
-unittest:
+testing:
   stage: Unit tests
   script:
-    - poetry run python3 -u -m pytest --cov=git_prune --cov-report=html
+    - poetry run python3 -u -m pytest --cov=git_prune --cov-report=xml:coverage.xml --junitxml=report.xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
-    paths:
-      - htmlcov
+    when: always
+    reports:
+      junit: report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+test-build:
+  stage: Test build
+  script:
+    - poetry build
 
 publish:
   variables:
@@ -24,3 +36,4 @@ publish:
     - poetry publish -u __token__ -p $PYPI --build
   only:
     - master
+    - main

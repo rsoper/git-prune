@@ -5,3 +5,5 @@ build
 **.DS_Store**
 .vscode
 .coverage
+report.xml
+coverage.xml
