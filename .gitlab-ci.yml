@@ -3,7 +3,6 @@ default:
 
 stages:
   - Unit tests
-  - Test build
   - Publish
 
 before_script:
@@ -23,20 +22,11 @@ testing:
         coverage_format: cobertura
         path: coverage.xml
 
-test-build:
-  stage: Test build
-  script:
-    - poetry build
-
 publish:
-  variables:
-    PYPI: $pypi
   stage: Publish
   script:
-    - poetry config pypi-token.pypi $PYPI_KEY
     - poetry config repositories.gitlab https://gitlab.richardsoper.me/api/v4/projects/40/packages/pypi
     - poetry publish --repository gitlab -u gitlab-ci-token -p $CI_JOB_TOKEN --build
-    - poetry publish --repository pypi --build
+    - poetry publish -u __token__ -p $PYPI_KEY
   only:
-    - master
     - main
